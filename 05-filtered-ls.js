@@ -14,6 +14,8 @@ fs.readdir(filePath, 'utf8', (err, data) => {
     }).join("\n"))
 })
 
+
+
 // functioning programming is without for loops and data mutation
 
 // var fs = require('fs')
