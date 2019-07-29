@@ -29,38 +29,38 @@ command-line arguments.
 */
 
 const http = require('http');
-const fs = require('fs'); // The fs module can be used to read from and write to files using a stream interface. 
-let url1 = process.argv[2];
-let url2 = process.argv[3];
-let url3 = process.argv[4];
-// console.log(url1, "\n", url2, "\n", url3, "\n");
+let results = [];
 
-(async function() {
-  let firstUrl = await getData(url1); 
-  console.log(firstUrl);
-
-  let secondUrl = await getData(url2);
-  console.log(secondUrl);
-
-  let thirdUrl = await getData(url3);
-  console.log(thirdUrl);
-  
-})()
-
-
-async function getData(url) {
-  return new Promise((resolve, reject) => {
-    http.get(url, response => {
-      let string = '';
-      response
-          .setEncoding('utf8')
-          .on('data', data => {
-              string += data;
-          })
-          .on('end', () => {
-              resolve(string);
-          });  
-      })  
-  });
+async function getData(index) {
+    return new Promise((resolve, reject) => {
+        http.get(process.argv[2 + index], response => {
+          let string = '';
+          response
+              .setEncoding('utf8')
+              .on('data', data => {
+                  string += data;
+              })
+              .on('end', () => {
+                  resolve(string);
+              });  
+          })  
+      });
 }
 
+
+async function start() {
+    for (let i = 0; i < 3; i++) {
+        let data = await getData(i);
+        results.push(data);
+    }
+
+    printResults(results)
+}
+
+function printResults(array) {
+    array.forEach(cv => {
+        console.log(cv);
+    })
+}
+
+start();
